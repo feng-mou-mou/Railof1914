@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>铁路1914 - 游戏</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/game.css">
+</head>
+<body>
+    <div class="game-container">
+        <!-- 游戏头部 -->
+        <div class="game-header">
+            <div class="game-title">
+                <span id="game-title">Rails of 1914</span>
+            </div>
+            <div class="game-info">
+                <div class="info-item">
+                    <i class="info-icon">🕒</i>
+                    <span>Turn <span id="round-number">1</span>/40</span>
+                </div>
+                <div class="info-item">
+                    <i class="info-icon">🏳️</i>
+                    <span id="current-player">德军</span>
+                </div>
+            </div>
+            <div class="header-controls">
+                <a href="/" class="header-button">返回首页</a>
+            </div>
+        </div>
+        
+        <!-- 回合信息横幅 -->
+        <div class="turn-banner">
+            <div class="banner-content">
+                <h2><span id="phase-info">建设期</span></h2>
+                <div id="role-icon" class="role-icon"></div>
+            </div>
+        </div>
+        
+        <!-- 游戏主体 -->
+        <div class="game-main">
+            <!-- 地图区域 -->
+            <div class="game-map-container">
+                <div id="game-map"></div>
+            </div>
+            
+            <!-- 侧边栏 -->
+            <div class="game-sidebar">
+                <!-- 资源信息 -->
+                <div class="sidebar-section">
+                    <h3>资源信息</h3>
+                    <div class="resource-panel">
+                        <div class="resource-faction">
+                            <h4>德军</h4>
+                            <div class="resource-item">
+                                <span>GDP:</span>
+                                <span id="germany-gdp-value">0</span>
+                            </div>
+                            <div class="resource-item">
+                                <span>人口:</span>
+                                <span id="germany-population-value">0</span>
+                            </div>
+                        </div>
+                        <div class="resource-faction">
+                            <h4>协约国</h4>
+                            <div class="resource-item">
+                                <span>GDP:</span>
+                                <span id="allies-gdp-value">0</span>
+                            </div>
+                            <div class="resource-item">
+                                <span>人口:</span>
+                                <span id="allies-population-value">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 区域信息 -->
+                <div class="sidebar-section">
+                    <h3>区域信息</h3>
+                    <div id="region-info">
+                        <div class="no-region-selected">请选择一个区域</div>
+                    </div>
+                </div>
+                
+                <!-- 操作面板 -->
+                <div class="sidebar-section">
+                    <h3>操作面板</h3>
+                    <div class="action-panel">
+                        <button id="build-town" class="action-button">
+                            <span>建造城镇</span>
+                            <span class="action-cost">50 GDP</span>
+                        </button>
+                        <button id="build-railway" class="action-button">
+                            <span>建造铁路</span>
+                            <span class="action-cost">30 GDP</span>
+                        </button>
+                        <button id="upgrade-town" class="action-button">
+                            <span>升级城镇</span>
+                            <span class="action-cost">100-200 GDP</span>
+                        </button>
+                        <button id="mobilize-troops" class="action-button">
+                            <span>动员军队</span>
+                        </button>
+                        <button id="declare-war" class="action-button">
+                            <span>宣战</span>
+                        </button>
+                        <button id="quick-settlement" class="action-button">
+                            <span>快速结算</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 游戏规则 -->
+                <div class="sidebar-section">
+                    <h3>游戏规则</h3>
+                    <div class="game-rules">
+                        <ul>
+                            <li>建设期内建造城市和铁路</li>
+                            <li>扩展你的铁路网络</li>
+                            <li>动员军队防守领土</li>
+                            <li>第40回合自动开战</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- 回合控制 -->
+                <div class="turn-control">
+                    <h3>对局状态</h3>
+                    <div class="turn-status">
+                        <div class="status-item">
+                            <span class="status-label">玩家:</span>
+                            <span id="player-status" class="status-active">行动中</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">AI:</span>
+                            <span id="ai-status" class="status-waiting">等待中</span>
+                        </div>
+                    </div>
+                    
+                    <!-- AI思考显示 -->
+                    <div id="ai-thinking" style="display: none;" class="ai-thinking">
+                        <span class="thinking-text">AI思考中</span>
+                        <span class="thinking-dots">...</span>
+                    </div>
+                    
+                    <!-- 游戏操作按钮 -->
+                    <div class="action-buttons">
+                        <button id="next-round-btn" class="action-button">结束回合</button>
+                        <button id="reset-game-btn" class="action-button">重置游戏</button>
+                    </div>
+                    
+                    <!-- AI难度选择 -->
+                    <div class="ai-difficulty">
+                        <label for="ai-difficulty-select">AI难度:</label>
+                        <select id="ai-difficulty-select">
+                            <option value="easy">简单</option>
+                            <option value="medium" selected>中等</option>
+                            <option value="hard">困难</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- 游戏日志 -->
+                <div class="sidebar-section">
+                    <h3>游戏日志</h3>
+                    <div id="game-log" class="game-log"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 模态框 -->
+    <div id="action-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title" class="modal-title">操作</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div id="modal-body" class="modal-body">
+                <!-- 动态内容 -->
+            </div>
+            <div class="modal-footer">
+                <button id="modal-confirm" class="modal-button confirm-button">确认</button>
+                <button id="modal-cancel" class="modal-button cancel-button">取消</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 角色介绍弹出框 -->
+    <div id="role-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="role-modal-title" class="modal-title">角色信息</h3>
+                <span class="close-role-modal">&times;</span>
+            </div>
+            <div id="role-modal-body" class="modal-body">
+                <!-- 动态内容 -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- JavaScript -->
+    <script src="/static/js/hexagons.js"></script>
+    <script src="/static/js/game.js"></script>
+    <!-- 添加城镇动画控制脚本 -->
+    <script src="/static/js/override/town-animation.js"></script>
+    <!-- 游戏初始化脚本 -->
+    <script>
+        // 等待页面完全加载再初始化游戏
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM加载完成，等待所有资源加载...');
+            
+            // 使用timeout确保所有资源都加载完毕
+            setTimeout(function() {
+                try {
+                    console.log('开始初始化游戏...');
+                    if (typeof initGame === 'function') {
+                        // 设置调试输出
+                        window.DEBUG_OUTPUT = true;
+                        
+                        // 调用初始化函数
+                        initGame();
+                        console.log('游戏初始化成功');
+                    } else {
+                        console.error('initGame函数未定义');
+                    }
+                } catch (error) {
+                    console.error('游戏初始化出错: ', error);
+                }
+            }, 300);
+        });
+    </script>
+</body>
+</html> 

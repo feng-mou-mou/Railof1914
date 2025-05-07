@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rails of 1914 - 自定义游戏</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #1a2633;
+            color: #ffffff;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            padding: 15px 20px;
+            background-color: #2c3e50;
+            text-align: center;
+            border-bottom: 1px solid #34495e;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            overflow-y: auto;
+            max-width: 1000px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .message {
+            margin-bottom: 20px;
+            max-width: 80%;
+        }
+
+        .assistant {
+            align-self: flex-start;
+            background-color: #2c3e50;
+            border-radius: 15px 15px 15px 0;
+            padding: 15px;
+        }
+
+        .user {
+            align-self: flex-end;
+            background-color: #3498db;
+            border-radius: 15px 15px 0 15px;
+            padding: 15px;
+            margin-left: auto;
+        }
+
+        .message-content {
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .map-image {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-top: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .input-container {
+            display: flex;
+            padding: 20px;
+            border-top: 1px solid #34495e;
+            background-color: #2c3e50;
+        }
+
+        .message-input {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 20px;
+            margin-right: 10px;
+            background-color: #34495e;
+            color: white;
+        }
+
+        .message-input::placeholder {
+            color: #95a5a6;
+        }
+
+        .send-button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .send-button:hover {
+            background-color: #2980b9;
+        }
+
+        .file-upload {
+            background-color: #16a085;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            cursor: pointer;
+            margin-right: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .file-upload:hover {
+            background-color: #1abc9c;
+        }
+
+        .file-upload input[type="file"] {
+            display: none;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background-color: transparent;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+        }
+
+        .back-button:hover {
+            text-decoration: underline;
+        }
+
+        /* 地图样式 */
+        .map-container {
+            width: 100%;
+            height: 400px;
+            margin-top: 15px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="/" class="back-button">← 返回</a>
+        <h1>Rails of 1914 - 自定义地图生成器</h1>
+    </div>
+
+    <div class="chat-container" id="chat-container">
+        <div class="message assistant">
+            <p class="message-content">您好，请给我你希望生成游戏地图的真实地图。</p>
+        </div>
+        <!-- 消息将在这里动态添加 -->
+    </div>
+
+    <div class="input-container">
+        <label class="file-upload">
+            <input type="file" id="file-input" accept="image/*">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"></path>
+                <path d="M16 5h6v6"></path>
+                <path d="M8 21l13-13"></path>
+            </svg>
+        </label>
+        <input type="text" class="message-input" id="message-input" placeholder="输入你的消息或上传图片...">
+        <button class="send-button" id="send-button">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 2L11 13"></path>
+                <path d="M22 2l-7 20-4-9-9-4 20-7z"></path>
+            </svg>
+        </button>
+    </div>
+
+    <!-- 引入六边形地图渲染脚本 -->
+    <script src="/static/js/hexagons.js"></script>
+    
+    <script>
+        // 在渲染地图前先初始化游戏状态
+        function resetGameAndRenderMap(callback) {
+            fetch('/api/reset-game', { method: 'POST' })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        callback();
+                    } else {
+                        alert('初始化地图失败');
+                    }
+                })
+                .catch(() => alert('初始化地图失败'));
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatContainer = document.getElementById('chat-container');
+            const messageInput = document.getElementById('message-input');
+            const sendButton = document.getElementById('send-button');
+            const fileInput = document.getElementById('file-input');
+            let hexGrid = null; // 地图对象
+
+            // 发送消息函数
+            function sendMessage() {
+                const message = messageInput.value.trim();
+                if (message) {
+                    addUserMessage(message);
+                    messageInput.value = '';
+                    
+                    // 等待一会儿后返回地图
+                    setTimeout(() => {
+                        respondWithGameMap();
+                    }, 1000);
+                }
+            }
+
+            // 添加用户消息到聊天框
+            function addUserMessage(message) {
+                const userDiv = document.createElement('div');
+                userDiv.className = 'message user';
+                
+                const messageP = document.createElement('p');
+                messageP.className = 'message-content';
+                messageP.textContent = message;
+                
+                userDiv.appendChild(messageP);
+                chatContainer.appendChild(userDiv);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+
+            // 添加系统消息到聊天框
+            function addAssistantMessage(message, includeMap = false) {
+                const assistantDiv = document.createElement('div');
+                assistantDiv.className = 'message assistant';
+                
+                const messageP = document.createElement('p');
+                messageP.className = 'message-content';
+                messageP.textContent = message;
+                
+                assistantDiv.appendChild(messageP);
+                
+                // 如果需要添加地图
+                if (includeMap) {
+                    const mapContainer = document.createElement('div');
+                    mapContainer.className = 'map-container';
+                    mapContainer.id = 'game-map-' + Date.now(); // 使用时间戳创建唯一ID
+                    assistantDiv.appendChild(mapContainer);
+                    
+                    chatContainer.appendChild(assistantDiv);
+                    chatContainer.scrollTop = chatContainer.scrollHeight;
+                    
+                    // 初始化六边形地图前先reset
+                    resetGameAndRenderMap(() => {
+                        hexGrid = new HexGrid(mapContainer.id);
+                        hexGrid.init();
+                    });
+                } else {
+                    chatContainer.appendChild(assistantDiv);
+                    chatContainer.scrollTop = chatContainer.scrollHeight;
+                }
+            }
+
+            // 处理文件上传
+            function handleFileUpload(file) {
+                if (file && file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const userDiv = document.createElement('div');
+                        userDiv.className = 'message user';
+                        
+                        const userImg = document.createElement('img');
+                        userImg.className = 'map-image';
+                        userImg.src = e.target.result;
+                        userImg.alt = '用户上传的地图';
+                        
+                        userDiv.appendChild(userImg);
+                        chatContainer.appendChild(userDiv);
+                        chatContainer.scrollTop = chatContainer.scrollHeight;
+                        
+                        // 等待一会儿后返回地图
+                        setTimeout(() => {
+                            respondWithGameMap();
+                        }, 1500);
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    alert('请上传有效的图片文件！');
+                }
+            }
+
+            // 返回游戏地图
+            function respondWithGameMap() {
+                addAssistantMessage('已根据您的需求生成六边形游戏地图：', true);
+            }
+
+            // 事件监听器
+            sendButton.addEventListener('click', sendMessage);
+            
+            messageInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+            
+            fileInput.addEventListener('change', function(e) {
+                if (e.target.files.length > 0) {
+                    handleFileUpload(e.target.files[0]);
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

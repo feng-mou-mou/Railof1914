@@ -1,0 +1,209 @@
+/* 全局样式 */
+:root {
+    --bg-color: #000000;
+    --text-color: #ffffff;
+    --primary-blue: #3498db;
+    --primary-red: #e74c3c;
+    --accent-color: #ffcc00;
+    --panel-bg: #1a2633;
+    --panel-border: #34495e;
+    --button-bg: #2c3e50;
+    --button-hover: #34495e;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+.turn-banner {
+    background-color: var(--panel-bg);
+    text-align: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--panel-border);
+}
+
+.turn-banner h2 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.resource-panel {
+    background-color: var(--panel-bg);
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+.resource-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    border-bottom: 1px solid var(--panel-border);
+}
+
+.resource-item:last-child {
+    border-bottom: none;
+}
+
+.no-region-selected {
+    text-align: center;
+    padding: 20px;
+    color: #999;
+    font-style: italic;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .turn-banner h2 {
+        font-size: 1.2rem;
+    }
+}
+
+/* 全局样式 */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #3c5b96;
+    --secondary-color: #844d36;
+    --light-border: #ddd;
+    --header-bg: #2c3e50;
+    --header-text: #fff;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    margin: 0;
+    padding: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    margin-top: 0;
+}
+
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* 容器 */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* 按钮 */
+.btn {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #ddd;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn:hover {
+    background-color: #ccc;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #2a4070;
+    text-decoration: none;
+}
+
+/* 首页样式 */
+header {
+    background-color: var(--header-bg);
+    color: var(--header-text);
+    padding: 40px 0;
+    text-align: center;
+    margin-bottom: 30px;
+    border-radius: 8px;
+}
+
+header h1 {
+    font-size: 36px;
+    margin-bottom: 8px;
+}
+
+header h2 {
+    font-size: 24px;
+    font-weight: 400;
+    margin: 0;
+}
+
+.game-intro {
+    margin-bottom: 30px;
+    line-height: 1.8;
+}
+
+.features {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.features ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    padding-left: 20px;
+}
+
+.cta {
+    text-align: center;
+    margin: 40px 0;
+}
+
+.cta .btn {
+    padding: 12px 30px;
+    font-size: 20px;
+}
+
+.game-rules {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+.game-rules li {
+    margin-bottom: 10px;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    margin-top: 30px;
+    border-top: 1px solid var(--light-border);
+    color: #777;
+} 

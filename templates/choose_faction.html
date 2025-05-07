@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>选择势力 - 铁路帝国</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #1a2633;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background-color: #2c3e50;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .back-button:hover {
+            background-color: #34495e;
+        }
+
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 48px;
+            margin-bottom: 50px;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .factions {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            align-items: stretch;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .faction {
+            flex: 1;
+            max-width: 500px;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            text-decoration: none;
+            color: #ffffff;
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+
+        .faction:hover {
+            transform: translateY(-5px);
+        }
+
+        .faction.germany {
+            border: 2px solid #e74c3c;
+            box-shadow: 0 0 20px rgba(231, 76, 60, 0.3);
+        }
+
+        .faction.germany:hover {
+            box-shadow: 0 0 30px rgba(231, 76, 60, 0.5);
+        }
+
+        .faction.entente {
+            border: 2px solid #3498db;
+            box-shadow: 0 0 20px rgba(52, 152, 219, 0.3);
+        }
+
+        .faction.entente:hover {
+            box-shadow: 0 0 30px rgba(52, 152, 219, 0.5);
+        }
+
+        .faction h2 {
+            font-size: 36px;
+            margin: 0 0 10px 0;
+        }
+
+        .faction .subtitle {
+            font-style: italic;
+            color: #bdc3c7;
+            margin-bottom: 20px;
+        }
+
+        .faction .description {
+            color: #95a5a6;
+            font-size: 18px;
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .factions {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .faction {
+                width: 100%;
+                max-width: none;
+            }
+
+            h1 {
+                font-size: 36px;
+                margin-bottom: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="/" class="back-button">← 返回</a>
+    <div class="container">
+        <h1>Choose Your Faction</h1>
+        <div class="factions">
+            <a href="/game?faction=germany" class="faction germany">
+                <div>
+                    <h2>Imperial Germany</h2>
+                    <p class="subtitle">Execute the Schlieffen Plan</p>
+                    <p class="description">Fast rail network, aggressive strategy</p>
+                </div>
+            </a>
+            <a href="/game?faction=entente" class="faction entente">
+                <div>
+                    <h2>The Entente</h2>
+                    <p class="subtitle">Defend the Republic</p>
+                    <p class="description">Flexible defense, counterattack ability</p>
+                </div>
+            </a>
+        </div>
+    </div>
+</body>
+</html> 
